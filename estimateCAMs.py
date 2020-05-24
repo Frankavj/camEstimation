@@ -23,7 +23,7 @@ def vehicle_cams(fps, vehicle, frame_amount, positionList, velocityList):
             # The CAM conditions are not met, and the maximum_wait has not been reached
             i += 1
 
-    print("Vehicle " + str(vehicle) + " has " + str(frame_amount) + " frames and " + str(cams) + " cams based on velocity data.")
+    # print("Vehicle " + str(vehicle) + " has " + str(frame_amount) + " frames and " + str(cams) + " cams.")
     return cams
 
 
