@@ -2,7 +2,7 @@ import math
 
 
 # Returns the number of CAMs for this vehicle
-def vehicle_cams(fps, vehicle, frame_amount, positionList, velocityList):
+def vehicle_cams(fps, frame_amount, positionList, velocityList):
     # We must keep track of which index of data we must compare to
     # The framerate of the data determines which index we must look at for
     # the next possible CAM
@@ -30,7 +30,7 @@ def vehicle_cams(fps, vehicle, frame_amount, positionList, velocityList):
 def cam_conditions_are_met(old, new, positions, velocities):
     return change(positions[old], positions[new]) >= 4 \
            or change(velocities[old], velocities[new]) >= 0.5 \
-           # or change(directions[old], directions[new]) >= 4
+           # or TODO change(directions[old], directions[new]) >= 4
 
 
 def change(old, new):

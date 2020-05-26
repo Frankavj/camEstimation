@@ -11,4 +11,5 @@ def calculate_macroscopic_params(vehicle_amount, duration, headway_dict, avg_spe
 
     density = 1 / mean(headways)
 
-    return flow, density, speed
+    return round(flow, 4), round(density, 4), round(speed, 4)
+
