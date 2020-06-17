@@ -13,8 +13,6 @@ NUM_VEHICLES = 10
 # VEHICLE DATA (PER TRACK) (highD tracksMeta.csv)
 TRACKMETAFILE = "_tracksMeta.csv"
 FRAMES = 5
-DIRECTION = 7
-DISTANCE = 8
 AVG_VELOCITY = 11
 
 # FRAME DATA (PER VEHICLE) (highD tracks.csv)
@@ -43,6 +41,7 @@ def read_recording(path):
     headway_dict = {}
     position_dict = {}
     velocity_dict = {}
+    direction_dict = {}
 
     sniffer = csv.Sniffer()
 
@@ -99,8 +98,16 @@ def read_recording(path):
             position_dict = add_to_dict(position_dict, vehicle, position)
 
             # Fill in the vehicle velocity dictionary
-            velocity = (float(row[X_VELOCITY]), float(row[Y_VELOCITY]))
-            velocity_dict = add_to_dict(velocity_dict, vehicle, velocity)
+            (vx, vy) = (float(row[X_VELOCITY]), float(row[Y_VELOCITY]))
+            velocity_dict = add_to_dict(velocity_dict, vehicle, (vx, vy))
+
+            # Fill in the direction dictionary
+            direction = None
+            if vx != 0:
+                direction = math.degrees(math.atan(vy/vx))
+            elif vy != 0:
+                direction = 90
+            direction_dict = add_to_dict(direction_dict, vehicle, direction)
 
             # Fill in the vehicle distance headway dictionary
             # When the headway is 0 (no preceding car), take the front distance
@@ -112,14 +119,18 @@ def read_recording(path):
     # Get the CAM prediction per vehicle in the track
     vehicle_id = 1
     while vehicle_id <= vehicle_amount:
-        cams += vehicle_cams(fps, frame_amounts[vehicle_id - 1], position_dict[vehicle_id], velocity_dict[vehicle_id])
+        cams += vehicle_cams(fps,
+                             frame_amounts[vehicle_id - 1],
+                             position_dict[vehicle_id],
+                             velocity_dict[vehicle_id],
+                             direction_dict[vehicle_id])
         vehicle_id += 1
 
     # Get the macroscopic parameter values for this recording
     flow, density, speed = calculate_macroscopic_params(vehicle_amount, duration, headway_dict, avg_speeds)
 
     print("Path: ", path)
-    return recording_id, cams, flow, density, speed
+    return recording_id, duration, cams, flow, density, speed
 
 
 def add_to_dict(dictionary, key, value):
@@ -140,28 +151,17 @@ if __name__ == "__main__":
     # Create a file for the results of the script
     results = open("results.csv", "w")
     writer = csv.writer(results)
-    writer.writerow(["Recording ID", "CAMs", "Flow (vehicle/s)", "Density (vehicle/m)", "Average speed (m/s)"])
+    writer.writerow(["Recording ID", "Duration", "CAMs", "Cams/s", "Flow (vehicle/s)", "Density (vehicle/m)", "Average speed (m/s)"])
 
-    while track_num < 5:
-        recording_id, cams, flow, density, speed = read_recording(path)
-        writer.writerow([recording_id, cams, flow, density, speed])
+    # Read code:
+    while os.path.exists(path + '_tracks.csv'):
+        recording_id, duration, cams, flow, density, speed = read_recording(path)
+        writer.writerow([recording_id, duration, cams, round(cams/duration, 4), flow, density, speed])
 
         track_num += 1
         if track_num < 10:
             path = 'data/0' + str(track_num)
         else:
             path = 'data/' + str(track_num)
-
-
-    # Read code:
-    # while os.path.exists(path + '_tracks.csv'):
-    #     cams, flow, density, speed = read_recording(path)
-    #     writer.writerow([cams, flow, density, speed])
-    #
-    #     track_num += 1
-    #     if track_num < 10:
-    #         path = 'data/0' + str(track_num)
-    #     else:
-    #         path = 'data/' + str(track_num)
 
     results.close()
