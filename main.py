@@ -3,20 +3,20 @@ import os
 from estimateCAMs import *
 from macroscopicParams import *
 
-# TRACK DATA (highD recordingMeta.csv)
-METAFILE = "_recordingMeta.csv"
+# GLOBAL DATA (PER RECORDING)
+METAFILE = "_recordingMeta.csv"  # Filename
 ID = 0
 FRAMERATE = 1
 DURATION = 7
 NUM_VEHICLES = 10
 
-# VEHICLE DATA (PER TRACK) (highD tracksMeta.csv)
-TRACKMETAFILE = "_tracksMeta.csv"
+# VEHICLE DATA (PER TRACK)
+TRACKMETAFILE = "_tracksMeta.csv"  # Filename
 FRAMES = 5
 AVG_VELOCITY = 11
 
-# FRAME DATA (PER VEHICLE) (highD tracks.csv)
-TRACKFILE = "_tracks.csv"
+# FRAME DATA (PER VEHICLE)
+TRACKFILE = "_tracks.csv"  # Filename
 VEHICLE_ID = 1
 X_POSITION = 2
 Y_POSITION = 3
@@ -151,7 +151,8 @@ if __name__ == "__main__":
     # Create a file for the results of the script
     results = open("results.csv", "w")
     writer = csv.writer(results)
-    writer.writerow(["Recording ID", "Duration", "CAMs", "Cams/s", "Flow (vehicle/s)", "Density (vehicle/m)", "Average speed (m/s)"])
+    writer.writerow(["Recording ID", "Duration", "CAMs", "Cams/s", "Flow (vehicle/s)", "Density (vehicle/m)",
+                     "Average speed (m/s)"])
 
     # Read code:
     while os.path.exists(path + '_tracks.csv'):
