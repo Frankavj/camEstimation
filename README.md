@@ -11,7 +11,7 @@ Each recording in this data set has three csv files, each starting with the reco
 An example of this is the number of frames that a vehicle is in the recording.
 - XX_tracks: contains frame-specific data of vehicles, such as their x- and y-velocity.
 
-The input data must be placed in the data folder.
+The input data must be placed in a folder "data", in the same folder as main.py.
 
 The relevant data for this script is defined as global variables in main.py, which collects this data from the input file,
 runs the functions to calculate the macroscopic parameters and CAM generations,
