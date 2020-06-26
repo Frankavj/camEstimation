@@ -67,13 +67,7 @@ def directional_change(old, new, directions, positions):
                 break
         if i == -1:
             # The vehicle has been static from the first frame until now:
-            dx = positions[new][0] - positions[old][0]
-            dy = positions[new][1] - positions[old][1]
-
-            if dx == 0:
-                return 0
-
-            return math.degrees(math.atan(dy / dx))
+            return 0
 
     return abs(direction_old - direction_new)
 
